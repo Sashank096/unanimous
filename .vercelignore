@@ -1,0 +1,12 @@
+.env
+.env.*
+.git
+.vercel
+.vscode
+__pycache__
+*.py[cod]
+venv
+.venv
+.venv-*
+*.zip
+supabase/.temp

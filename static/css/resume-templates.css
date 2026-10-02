@@ -1,0 +1,189 @@
+/* =====================================================
+   Shared resume document structure
+   Every template renders the same semantic blocks:
+   .r-header .r-summary .r-experience .r-education .r-projects .r-skills
+   Templates differ through layout, section ORDER, type, and color —
+   not just accent-color swaps.
+   ===================================================== */
+.resume-doc{
+  --r-accent:#c9ff45; --r-ink:#141414; --r-sub:#5a5a5a; --r-line:#e4e4e4; --r-font:"Manrope",Arial,sans-serif;
+  font-family:var(--r-font);color:var(--r-ink);background:#fff;padding:46px 50px;font-size:12.5px;line-height:1.55;
+  min-height:100%;
+}
+.resume-doc h5{
+  font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--r-accent);
+  margin:0 0 12px;font-weight:700;
+}
+.resume-doc section{margin-bottom:22px}
+.resume-doc section:last-child{margin-bottom:0}
+.r-header{margin-bottom:26px}
+.r-photo-row{display:flex;align-items:center;gap:16px;margin-bottom:4px}
+.r-photo{width:64px;height:64px;border-radius:50%;object-fit:cover;flex-shrink:0}
+.r-photo-row .r-name{margin-bottom:2px}
+.r-name{font-size:30px;font-weight:800;letter-spacing:-.02em;margin-bottom:4px}
+.r-headline{color:var(--r-sub);font-size:13px;margin-bottom:12px}
+.r-contact{display:flex;flex-wrap:wrap;gap:5px 14px;font-size:10.5px;color:var(--r-sub)}
+.r-summary p{margin:0;color:#333}
+.r-item{margin-bottom:14px}
+.r-item:last-child{margin-bottom:0}
+.r-item-top{display:flex;justify-content:space-between;gap:10px;font-weight:700;font-size:12.5px;margin-bottom:2px}
+.r-item-org{font-weight:500;color:var(--r-sub);font-size:11.5px;margin-bottom:4px}
+.r-item-date{font-size:10.5px;color:var(--r-sub);font-weight:500;white-space:nowrap}
+.r-item p{margin:0;color:#333}
+.r-skill-chips{display:flex;flex-wrap:wrap;gap:7px}
+.r-skill-chips span{
+  border:1px solid var(--r-line);border-radius:999px;padding:4px 11px;font-size:10.5px;color:var(--r-sub);
+}
+.r-empty-hint{color:#b8b8b8;font-style:italic;font-size:11.5px}
+
+/* ---------- 1. Basic — plain single column, safest for any ATS ---------- */
+.rt-basic{--r-accent:#2f6b3a;--r-font:"Manrope",Arial,sans-serif}
+.rt-basic .r-header{border-bottom:2px solid var(--r-ink);padding-bottom:14px}
+.rt-basic .r-name{font-size:24px}
+
+/* ---------- 2. Minimalist — thin rules, lots of whitespace ---------- */
+.rt-minimalist{--r-accent:#8a8a8a;padding:54px 60px}
+.rt-minimalist .r-name{font-weight:300;font-size:32px;letter-spacing:.01em}
+.rt-minimalist h5{font-weight:500;letter-spacing:.22em;color:#b3b3b3}
+.rt-minimalist section{border-top:1px solid #ececec;padding-top:18px}
+.rt-minimalist section:first-of-type{border-top:none}
+
+/* ---------- 3. Traditional — centered, formal, serif ---------- */
+.rt-traditional{--r-accent:#6b4a2f;--r-font:Georgia,"Times New Roman",serif}
+.rt-traditional .r-header{text-align:center;border-bottom:1px solid var(--r-ink);padding-bottom:16px}
+.rt-traditional .r-name{letter-spacing:.02em;font-weight:700}
+.rt-traditional .r-contact{justify-content:center}
+.rt-traditional h5{letter-spacing:.18em;font-style:italic;text-transform:none;color:var(--r-ink);border-bottom:1px solid var(--r-line);padding-bottom:6px}
+
+/* ---------- 4. Modern — bold dark name block ---------- */
+.rt-modern{--r-accent:#c9ff45}
+.rt-modern .r-header{background:#141414;color:#fff;margin:-46px -50px 26px;padding:44px 50px 30px}
+.rt-modern .r-name{font-size:38px}
+.rt-modern .r-header .r-headline{color:#bdbdbd}
+.rt-modern .r-header .r-contact{color:#9c9c9c}
+
+/* ---------- 5. IT Resume — stark two-column contrast ---------- */
+.rt-it{display:grid;grid-template-columns:1fr 1fr;column-gap:34px;grid-auto-flow:row dense;--r-accent:#2b5fa8}
+.rt-it .r-header{grid-column:1/-1;border-bottom:2px solid #2b5fa8;padding-bottom:12px}
+.rt-it .r-summary{grid-column:1/-1}
+.rt-it .r-experience{grid-column:1}
+.rt-it .r-projects{grid-column:1}
+.rt-it .r-education{grid-column:2}
+.rt-it .r-skills{grid-column:2}
+
+/* ---------- 6. Functional — skills lead, experience follows ---------- */
+.rt-functional{--r-accent:#3a3a3a;font-size:11.5px}
+.rt-functional{display:flex;flex-direction:column}
+.rt-functional .r-header{order:0}
+.rt-functional .r-summary{order:1}
+.rt-functional .r-skills{order:2;background:#f7f7f5;padding:16px 18px;border-radius:6px}
+.rt-functional .r-education{order:3}
+.rt-functional .r-experience{order:4}
+.rt-functional .r-projects{order:5}
+
+/* ---------- 7. Professional — one strategic block of color ---------- */
+.rt-professional{--r-accent:#8fa3b3;--r-font:"Manrope",Arial,sans-serif}
+.rt-professional .r-header{background:#2b333a;color:#fff;margin:-46px -50px 26px;padding:36px 50px 26px}
+.rt-professional .r-header .r-headline{color:#c3ccd3}
+.rt-professional .r-header .r-contact{color:#a7b1b8}
+.rt-professional .r-name{font-size:26px;letter-spacing:0}
+.rt-professional h5{color:#4a5b68;border-bottom:2px solid #4a5b68;padding-bottom:5px;letter-spacing:.1em}
+
+/* ---------- 8. College — education first, built for grads with little experience ---------- */
+.rt-college{--r-accent:#3f7d5c;display:flex;flex-direction:column}
+.rt-college .r-header{order:0;border-bottom:1px solid var(--r-line);padding-bottom:14px}
+.rt-college .r-summary{order:1}
+.rt-college .r-education{order:2}
+.rt-college .r-education h5:before{content:"🎓 ";font-size:10px}
+.rt-college .r-projects{order:3}
+.rt-college .r-experience{order:4}
+.rt-college .r-skills{order:5}
+
+/* ---------- 9. Creative — gradient header block ---------- */
+.rt-creative{display:grid;grid-template-columns:32% 68%;grid-auto-flow:row dense;padding:0;--r-accent:#ff6f4d}
+.rt-creative .r-header{grid-column:1;background:linear-gradient(160deg,var(--r-accent),#ffb199);color:#fff;padding:34px 24px;margin:0}
+.rt-creative .r-header .r-headline,.rt-creative .r-header .r-contact{color:#fff;opacity:.92}
+.rt-creative .r-skills{grid-column:1;padding:22px 24px;margin:0}
+.rt-creative .r-skills .r-skill-chips span{background:#fff0ec;border-color:#ffd9cc}
+.rt-creative .r-education{grid-column:1;padding:0 24px 22px;margin:0}
+.rt-creative .r-summary,.rt-creative .r-experience,.rt-creative .r-projects{grid-column:2;padding:30px 28px;margin:0}
+.rt-creative .r-summary{padding-top:34px}
+
+/* ---------- 10. Skill-Based — skills before job titles, for career pivots ---------- */
+.rt-skill-based{--r-accent:#a83263;display:flex;flex-direction:column}
+.rt-skill-based .r-header{order:0}
+.rt-skill-based .r-summary{order:1}
+.rt-skill-based .r-skills{order:2;padding:18px 0;border-top:2px solid var(--r-accent);border-bottom:2px solid var(--r-accent)}
+.rt-skill-based .r-skills .r-skill-chips span{background:var(--r-accent);color:#fff;border-color:var(--r-accent)}
+.rt-skill-based .r-experience{order:3}
+.rt-skill-based .r-projects{order:4}
+.rt-skill-based .r-education{order:5}
+
+/* ---------- 11. Hybrid — dark sidebar + chronological main ---------- */
+.rt-hybrid{
+  display:grid;grid-template-columns:36% 64%;grid-auto-flow:row dense;padding:0;--r-accent:#c9ff45;
+}
+.rt-hybrid .r-header{
+  grid-column:1;background:#141414;color:#fff;padding:38px 26px;margin:0;
+}
+.rt-hybrid .r-header .r-headline{color:#a9a9a9}
+.rt-hybrid .r-header .r-contact{flex-direction:column;color:#c9c9c9}
+.rt-hybrid .r-education,.rt-hybrid .r-skills{
+  grid-column:1;background:#1c1c1c;color:#eee;padding:24px 26px;margin:0;
+}
+.rt-hybrid .r-education h5,.rt-hybrid .r-skills h5{color:var(--r-accent)}
+.rt-hybrid .r-education .r-item-org,.rt-hybrid .r-education .r-item-date{color:#a9a9a9}
+.rt-hybrid .r-skill-chips span{border-color:#3a3a3a;color:#d6d6d6}
+.rt-hybrid .r-summary,.rt-hybrid .r-experience,.rt-hybrid .r-projects{
+  grid-column:2;padding:26px 30px;margin:0;
+}
+.rt-hybrid .r-summary{padding-top:38px}
+
+/* ---------- 12. General — bold, memorable header ---------- */
+.rt-general{--r-accent:#3f4f8a;font-size:12.5px}
+.rt-general .r-header{border-bottom:3px solid var(--r-accent);padding-bottom:14px}
+.rt-general .r-name{font-size:34px;text-transform:uppercase;letter-spacing:.01em}
+.rt-general h5{font-size:11.5px;letter-spacing:.1em}
+
+/* ---------- 13. Executive — understated two-column, senior-level ---------- */
+.rt-executive{display:grid;grid-template-columns:30% 70%;grid-auto-flow:row dense;--r-accent:#9c7c3c}
+.rt-executive .r-header{grid-column:1/-1;border-bottom:2px solid var(--r-ink);padding-bottom:16px;margin-bottom:20px}
+.rt-executive .r-name{font-size:26px;letter-spacing:.01em}
+.rt-executive .r-education,.rt-executive .r-skills{grid-column:1;padding-right:20px}
+.rt-executive .r-summary,.rt-executive .r-experience,.rt-executive .r-projects{grid-column:2}
+
+/* ---------- 14. Simple — one accent color, nothing else fighting for attention ---------- */
+.rt-simple{--r-accent:#c9455e}
+.rt-simple .r-header{border-left:4px solid var(--r-accent);padding-left:16px}
+.rt-simple h5{color:var(--r-accent)}
+.rt-simple .r-experience .r-item,.rt-simple .r-education .r-item{padding-left:16px;border-left:2px solid var(--r-line)}
+
+/* ---------- 15. Tech — terminal-inspired, four-block layout ---------- */
+.rt-tech{--r-font:"DM Mono",monospace;--r-accent:#2f9e6f;background:#0e0f0e;color:#e7f5ea}
+.rt-tech .r-name{color:#fff}
+.rt-tech .r-headline,.rt-tech .r-contact,.rt-tech .r-item-org,.rt-tech .r-item-date{color:#8fae97}
+.rt-tech .r-summary p,.rt-tech .r-item p{color:#cfe6d5}
+.rt-tech .r-header{border-bottom:1px dashed #2f4b38;padding-bottom:14px}
+.rt-tech h5:before{content:"# "}
+.rt-tech .r-skill-chips span{border-color:#2f4b38;color:#a9d1b3}
+.rt-tech{display:grid;grid-template-columns:1fr 1fr;column-gap:24px;grid-auto-flow:row dense}
+.rt-tech .r-header{grid-column:1/-1}
+.rt-tech .r-summary{grid-column:1/-1}
+.rt-tech .r-experience{grid-column:1}
+.rt-tech .r-projects{grid-column:2}
+.rt-tech .r-education{grid-column:1}
+.rt-tech .r-skills{grid-column:2}
+
+/* ---------- 16. Combined — reverse-chronological + full skills breakdown ---------- */
+.rt-combined{
+  display:grid;grid-template-columns:1fr 1fr;column-gap:30px;grid-auto-flow:row dense;
+  --r-accent:#2f5d4f;font-size:12px;
+}
+.rt-combined .r-header{grid-column:1/-1;border:1px solid var(--r-ink);padding:16px 18px;margin:0 0 20px}
+.rt-combined .r-name{font-size:24px}
+.rt-combined h5{background:#eef3f1;padding:5px 8px;letter-spacing:.08em}
+.rt-combined .r-summary{grid-column:1/-1}
+.rt-combined .r-experience{grid-column:1}
+.rt-combined .r-projects{grid-column:1}
+.rt-combined .r-education{grid-column:2}
+.rt-combined .r-skills{grid-column:2}

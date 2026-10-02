@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+{% block title %}Dashboard — U_NANI_MOUS{% endblock %}
+{% block extra_css %}<link rel="stylesheet" href="{{ url_for('static', filename='css/app.css') }}">{% endblock %}
+{% block body %}
+{% include "partials/nav.html" %}
+
+<div class="app-shell">
+  <div class="dash-top">
+    <div class="page-head" style="margin-bottom:0">
+      <span class="index">U_NANI_MOUS / DASHBOARD</span>
+      <h1>Welcome back, <em>{{ (user.name or user.email or 'User').split(' ')[0] }}</em>.</h1>
+      <p>Your profile feeds everything below — keep it current and your resumes stay current too.</p>
+    </div>
+    <div class="completion">
+      <div class="label"><span>Profile strength</span><span>{{ completion }}%</span></div>
+      <div class="bar"><div class="bar-fill" style="width:{{ completion }}%"></div></div>
+    </div>
+  </div>
+
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}{% for category, message in messages %}<div class="msg {{ category }}">{{ message }}</div>{% endfor %}{% endif %}
+  {% endwith %}
+
+  <div class="grid-cards">
+    <div class="dash-card">
+      <span class="tag">Profile</span>
+      <h3>Your one-time profile</h3>
+      <p>Name, contact details, and every professional link in one place. Everything downstream reads from here.</p>
+      <a class="btn primary" href="{{ url_for('profile_view') }}">Open profile ↗</a>
+    </div>
+    <div class="dash-card">
+      <span class="tag">Resume builder</span>
+      <h3>Build a resume</h3>
+      <p>Pick from 16 templates, auto-fill from your profile, fine-tune the rest, then enhance the wording with AI.</p>
+      <a class="btn primary" href="{{ url_for('resume_gallery') }}">Browse templates ↗</a>
+    </div>
+    <div class="dash-card">
+      <span class="tag">03 · Portfolio</span>
+      <h3>Publish a shareable portfolio</h3>
+      <p>Turn your profile into a live portfolio page recruiters can open instantly from a single public link.</p>
+      <a class="btn primary" href="{{ url_for('portfolio_view') }}">Open portfolio ↗</a>
+    </div>
+  </div>
+
+  <div class="section-title">Public portfolio</div>
+  <div class="portfolio-share compact">
+    <div>
+      <span class="mini-label">Shareable link</span>
+      <div class="share-link">{{ portfolio_url }}</div>
+    </div>
+    <div class="portfolio-actions">
+      <a class="btn primary" href="{{ url_for('public_portfolio', slug=portfolio_slug) }}" target="_blank">View public page</a>
+    </div>
+  </div>
+
+  <div class="section-title">Your resumes</div>
+  {% if resumes %}
+    <div class="resume-list">
+      {% for r in resumes %}
+      <div class="resume-row">
+        <div class="info">
+          <span class="name">{{ r.title }}</span>
+          <span class="meta">{{ template_map.get(r.template_id, {}).get('name', 'Standard Template') }}{% if r.updated_at %} · updated {{ r.updated_at[:10] }}{% endif %}</span>
+        </div>
+        <div class="actions">
+          <a class="btn" href="{{ url_for('resume_builder', resume_id=r.id) }}">Edit</a>
+          <form method="post" action="{{ url_for('resume_delete', resume_id=r.id) }}" onsubmit="return confirm('Delete this resume?')">
+            <button class="btn" type="submit">Delete</button>
+          </form>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <div class="empty-state">No resumes yet — pick a template to build your first one.</div>
+  {% endif %}
+</div>
+{% endblock %}

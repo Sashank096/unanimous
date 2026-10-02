@@ -1,0 +1,66 @@
+{% macro resume_doc(template_id, font, accent, name, headline, contact, summary, experience, education, projects, skills, doc_id='', photo_url='') %}
+<div class="resume-doc rt-{{ template_id }}" {% if doc_id %}id="{{ doc_id }}"{% endif %} style="--r-font:'{{ font }}',Arial,sans-serif;--r-accent:{{ accent }}">
+  <div class="r-header">
+    {% if photo_url %}
+    <div class="r-photo-row">
+      <img class="r-photo" src="{{ photo_url }}" alt="">
+      <div>
+        <div class="r-name">{{ name or 'Your Name' }}</div>
+        {% if headline %}<div class="r-headline">{{ headline }}</div>{% endif %}
+      </div>
+    </div>
+    {% else %}
+    <div class="r-name">{{ name or 'Your Name' }}</div>
+    {% if headline %}<div class="r-headline">{{ headline }}</div>{% endif %}
+    {% endif %}
+    <div class="r-contact">
+      {% for c in contact %}{% if c %}<span>{{ c|display_link }}</span>{% endif %}{% endfor %}
+    </div>
+  </div>
+
+  {% if summary %}
+  <div class="r-summary"><h5>Summary</h5><p>{{ summary }}</p></div>
+  {% endif %}
+
+  {% if experience %}
+  <div class="r-experience"><h5>Experience</h5>
+    {% for e in experience %}
+    <div class="r-item">
+      <div class="r-item-top"><span>{{ e.title }}</span><span class="r-item-date">{{ e.start }}{% if e.start or e.end %} – {% endif %}{{ e.end }}</span></div>
+      {% if e.org %}<div class="r-item-org">{{ e.org }}</div>{% endif %}
+      {% if e.desc %}<p>{{ e.desc }}</p>{% endif %}
+    </div>
+    {% endfor %}
+  </div>
+  {% endif %}
+
+  {% if education %}
+  <div class="r-education"><h5>Education</h5>
+    {% for e in education %}
+    <div class="r-item">
+      <div class="r-item-top"><span>{{ e.degree or e.school }}</span><span class="r-item-date">{{ e.start }}{% if e.start or e.end %} – {% endif %}{{ e.end }}</span></div>
+      {% if e.degree and e.school %}<div class="r-item-org">{{ e.school }}</div>{% endif %}
+      {% if e.desc %}<p>{{ e.desc }}</p>{% endif %}
+    </div>
+    {% endfor %}
+  </div>
+  {% endif %}
+
+  {% if projects %}
+  <div class="r-projects"><h5>Projects</h5>
+    {% for p in projects %}
+    <div class="r-item">
+      <div class="r-item-top"><span>{{ p.name }}</span><span class="r-item-date">{{ p.link }}</span></div>
+      {% if p.desc %}<p>{{ p.desc }}</p>{% endif %}
+    </div>
+    {% endfor %}
+  </div>
+  {% endif %}
+
+  {% if skills %}
+  <div class="r-skills"><h5>Skills</h5>
+    <div class="r-skill-chips">{% for s in skills %}<span>{{ s }}</span>{% endfor %}</div>
+  </div>
+  {% endif %}
+</div>
+{% endmacro %}

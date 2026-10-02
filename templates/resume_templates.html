@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% from "partials/resume_doc.html" import resume_doc %}
+{% block title %}Resume templates — U_NANI_MOUS{% endblock %}
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/app.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/resume-templates.css') }}">
+{% endblock %}
+{% block body %}
+{% include "partials/nav.html" %}
+
+<div class="app-shell">
+  <div class="page-head">
+    <span class="index">U_NANI_MOUS / RESUME</span>
+    <h1>Pick a <em>template</em>.</h1>
+    <p>Every template pulls in your saved profile automatically — pick the shape, fill the rest, enhance with AI.</p>
+  </div>
+
+  {% set preview_name = profile.full_name or user.name or 'Sashank Reddy' %}
+  {% set preview_headline = profile.headline or 'Add your professional headline' %}
+  {% set preview_contact = [profile.location, profile.mobile_number, user.email] + links|map(attribute='url')|list %}
+  {% set preview_summary = resume_content.get('summary') or profile.bio or 'Add a concise professional summary to see it here.' %}
+  {% set preview_experience = resume_content.get('experience') or [] %}
+  {% set preview_education = resume_content.get('education') or [] %}
+  {% set preview_projects = resume_content.get('projects') or [] %}
+  {% set preview_skills = resume_content.get('skills') or [] %}
+  <div class="tpl-grid">
+    {% for t in templates %}
+    <div class="tpl-card">
+      <div class="tpl-preview-frame">
+        <div class="mini">
+          {{ resume_doc(t.id, 'Manrope', '#c9ff45', preview_name, preview_headline,
+             preview_contact, preview_summary, preview_experience, preview_education,
+             preview_projects, preview_skills, photo_url=photo_url) }}
+        </div>
+      </div>
+      <div class="tpl-meta">
+        <div class="name">{{ t.name }}</div>
+        <div class="tagline">{{ t.tagline }}</div>
+        <a class="btn primary" href="{{ url_for('resume_new', template_id=t.id) }}">Use this template</a>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}

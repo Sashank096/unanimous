@@ -1,0 +1,184 @@
+{% extends "base.html" %}
+{% block title %}Edit profile — U_NANI_MOUS{% endblock %}
+{% block body_class %}app{% endblock %}
+{% block extra_css %}<link rel="stylesheet" href="{{ url_for('static', filename='css/app.css') }}">{% endblock %}
+{% block body %}
+{% include "partials/nav.html" %}
+<div class="page-wrap narrow">
+  <div class="page-head">
+    <h1>Your profile</h1>
+    <p>Set up your career identity once. Your resumes and portfolio will use this information everywhere.</p>
+  </div>
+
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      {% for category, message in messages %}
+        <div class="msg {{ category }}">{{ message }}</div>
+      {% endfor %}
+    {% endif %}
+  {% endwith %}
+
+  <form class="form-card profile-editor" method="post" action="{{ url_for('profile_edit') }}" enctype="multipart/form-data">
+    <div class="profile-section-title">
+      <span>01</span><div><strong>Profile image</strong><small>Use a clear, professional photo.</small></div>
+    </div>
+    <div class="form-row profile-photo-row">
+      <div class="field">
+        <label>Profile photo <span style="opacity:.6">(optional — JPG, PNG, or WEBP up to 5 MB)</span></label>
+        <div id="avatarPicker" style="cursor:pointer;width:88px;height:88px;border-radius:50%;position:relative;margin-top:6px" title="Click + to add or change your photo">
+          <img id="avatarPreview" class="profile-avatar" src="{{ photo_url or '' }}" alt=""
+               style="width:88px;height:88px;margin:0;{{ '' if photo_url else 'display:none' }}">
+          <div id="avatarPlaceholder" class="profile-avatar" style="width:88px;height:88px;margin:0;display:{{ 'none' if photo_url else 'flex' }};align-items:center;justify-content:center;font-size:11px;text-align:center;color:#111;padding:6px">No photo yet</div>
+          <div id="avatarPlusBtn" style="position:absolute;bottom:-2px;right:-2px;width:28px;height:28px;border-radius:50%;background:var(--accent,#c9ff45);color:#111;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:700;line-height:1;border:2px solid #0f1115;box-shadow:0 1px 4px rgba(0,0,0,.4)">+</div>
+        </div>
+        <input type="file" id="photo" name="photo" accept=".png,.jpg,.jpeg,.webp" style="display:none">
+        <label class="checkbox-field" style="margin-top:14px">
+          <input type="checkbox" name="profile_image_public" {% if profile.profile_image_public and photo_url %}checked{% endif %} {% if not photo_url %}disabled{% endif %}>
+          <span><strong>Show my photo on the published portfolio</strong><small>{% if photo_url %}Optional. Your photo stays hidden while the portfolio is private.{% else %}Upload a photo above to enable this option.{% endif %}</small></span>
+        </label>
+        <label class="checkbox-field" style="margin-top:10px">
+          <input type="checkbox" name="portfolio_published" {% if profile.portfolio_published %}checked{% endif %}>
+          <span><strong>Publish my portfolio</strong><small>Anyone with your share link can view your professional profile.</small></span>
+        </label>
+      </div>
+    </div>
+
+    <div class="profile-section-title">
+      <span>02</span><div><strong>Professional identity</strong><small>This appears at the top of your resumes and portfolio.</small></div>
+    </div>
+    <div class="form-row">
+      <div class="field">
+        <label for="full_name">Full name</label>
+        <input type="text" id="full_name" name="full_name" value="{{ profile.full_name }}" placeholder="Your name" required>
+      </div>
+      <div class="field">
+        <label for="email_display">Email</label>
+        <input type="email" id="email_display" value="{{ user.email }}" disabled style="opacity:.6">
+      </div>
+    </div>
+
+    <div class="field" style="margin-bottom:18px">
+      <label for="headline">Professional headline</label>
+      <input type="text" id="headline" name="headline" value="{{ profile.headline or '' }}" placeholder="e.g. Full-stack developer building useful products">
+    </div>
+
+    <div class="field" style="margin-bottom:18px">
+      <label for="bio">Short professional introduction</label>
+      <textarea id="bio" name="bio" rows="5" placeholder="Describe what you build, what you are good at, and the kind of opportunities you are looking for.">{{ profile.bio or '' }}</textarea>
+      <small style="display:block;color:var(--muted);font-size:11px;line-height:1.5;margin-top:7px">This becomes the starting point for your resumes and public portfolio. You can tailor it later for a specific role.</small>
+    </div>
+
+    <div class="profile-section-title">
+      <span>03</span><div><strong>Contact details</strong><small>Choose what recruiters should use to reach you.</small></div>
+    </div>
+    <div class="form-row">
+      <div class="field">
+        <label for="mobile_number">Mobile number</label>
+        <input type="tel" id="mobile_number" name="mobile_number" value="{{ profile.mobile_number }}" placeholder="+91 90000 00000">
+      </div>
+      <div class="field">
+        <label for="location">Location</label>
+        <input type="text" id="location" name="location" value="{{ profile.location }}" placeholder="City, State">
+      </div>
+    </div>
+
+    <div class="profile-section-title">
+      <span>04</span><div><strong>Professional links</strong><small>Add profiles and work samples once. They can appear on your resumes and published portfolio.</small></div>
+    </div>
+    <div id="linkRows">
+      {% for l in links %}
+      <div class="link-row form-row">
+        <div class="field" style="max-width:180px">
+          <select name="link_platform[]" class="link-platform-select">
+            {% for p in platform_choices %}
+              <option value="{{ p }}" {{ 'selected' if p == l.platform_name }}>{{ p }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div class="field link-custom-label" style="{{ '' if l.platform_name not in platform_choices else 'display:none' }}">
+          <input type="text" name="link_label[]" value="{{ l.platform_name if l.platform_name not in platform_choices else '' }}" placeholder="Platform name">
+        </div>
+        <div class="field" style="flex:2">
+          <input type="text" name="link_url[]" value="{{ l.url }}" placeholder="yourname or full URL">
+        </div>
+        <button type="button" class="btn ghost remove-link-btn" title="Remove">✕</button>
+      </div>
+      {% endfor %}
+    </div>
+    <button type="button" id="addLinkBtn" class="btn ghost" style="margin-bottom:24px">+ Add a link</button>
+
+    <div class="form-actions">
+      <button class="btn" type="submit">Save profile</button>
+      <a class="btn ghost" href="{{ url_for('profile_view') }}">Cancel</a>
+    </div>
+  </form>
+</div>
+{% include "partials/footer.html" %}
+
+<template id="linkRowTemplate">
+  <div class="link-row form-row">
+    <div class="field" style="max-width:180px">
+      <select name="link_platform[]" class="link-platform-select">
+        {% for p in platform_choices %}<option value="{{ p }}">{{ p }}</option>{% endfor %}
+      </select>
+    </div>
+    <div class="field link-custom-label" style="display:none">
+      <input type="text" name="link_label[]" placeholder="Platform name">
+    </div>
+    <div class="field" style="flex:2">
+      <input type="text" name="link_url[]" placeholder="yourname or full URL">
+    </div>
+    <button type="button" class="btn ghost remove-link-btn" title="Remove">✕</button>
+  </div>
+</template>
+
+<script>
+  const rows = document.getElementById('linkRows');
+  const rowTpl = document.getElementById('linkRowTemplate');
+
+  function wireRow(row) {
+    const select = row.querySelector('.link-platform-select');
+    const customField = row.querySelector('.link-custom-label');
+    const toggle = () => { customField.style.display = select.value === 'Other' ? '' : 'none'; };
+    select.addEventListener('change', toggle);
+    row.querySelector('.remove-link-btn').addEventListener('click', () => row.remove());
+  }
+
+  document.querySelectorAll('#linkRows .link-row').forEach(wireRow);
+
+  // Clicking the avatar circle opens the hidden file picker; selecting a
+  // file previews it instantly (actual upload still happens on Save).
+  const avatarPicker = document.getElementById('avatarPicker');
+  const photoInput = document.getElementById('photo');
+  const avatarPreview = document.getElementById('avatarPreview');
+  const avatarPlaceholder = document.getElementById('avatarPlaceholder');
+  avatarPicker.addEventListener('click', () => photoInput.click());
+  photoInput.addEventListener('change', () => {
+    const file = photoInput.files[0];
+    if (!file) return;
+    if (file.size > 5 * 1024 * 1024) {
+      photoInput.value = '';
+      alert('Please choose an image smaller than 5 MB.');
+      return;
+    }
+    if (!file.type.startsWith('image/')) {
+      photoInput.value = '';
+      alert('Please choose a valid image file.');
+      return;
+    }
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      avatarPreview.src = e.target.result;
+      avatarPreview.style.display = '';
+      avatarPlaceholder.style.display = 'none';
+    };
+    reader.readAsDataURL(file);
+  });
+
+  document.getElementById('addLinkBtn').onclick = function () {
+    const node = rowTpl.content.firstElementChild.cloneNode(true);
+    rows.appendChild(node);
+    wireRow(node);
+  };
+</script>
+{% endblock %}

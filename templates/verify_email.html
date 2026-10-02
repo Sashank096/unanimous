@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block title %}Verify email — U_NANI_MOUS{% endblock %}
+{% block body_class %}auth{% endblock %}
+{% block body %}
+<div class="auth-wrap">
+  <div class="card verify-card">
+    <a class="logo" href="{{ url_for('index') }}">U_NANI_MOUS</a>
+    <h1>Verify your email</h1>
+    <p class="sub">Verify the code from your inbox. If it has expired, request a fresh code in the separate section below.</p>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}{% for category, message in messages %}<div class="msg {{ category }}">{{ message }}</div>{% endfor %}{% endif %}
+    {% endwith %}
+    <section class="otp-action">
+      <h2>1. Verify your email</h2>
+      <p>Enter the code you received to finish creating your account.</p>
+      <form method="post" action="{{ url_for('verify_email') }}">
+        <label for="verify-email">Email address</label>
+        <input id="verify-email" name="email" type="email" value="{{ email or '' }}" autocomplete="email" required>
+        <label for="token">Verification code</label>
+        <input id="token" name="token" inputmode="numeric" autocomplete="one-time-code" placeholder="Enter your OTP" required>
+        <button class="btn primary" type="submit">Verify email</button>
+      </form>
+    </section>
+    <section class="otp-action resend-action">
+      <h2>2. Need a new code?</h2>
+      <p>Request a new code separately. Check your inbox and spam folder.</p>
+      <form method="post" action="{{ url_for('resend_otp') }}">
+        <label for="resend-email">Send a new code to</label>
+        <input id="resend-email" name="email" type="email" value="{{ email or '' }}" autocomplete="email" required>
+        <button class="btn" type="submit">Send a new code</button>
+      </form>
+    </section>
+    <p class="sub"><a href="{{ url_for('login') }}">Already verified? Log in →</a></p>
+  </div>
+</div>
+{% endblock %}

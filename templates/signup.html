@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block title %}Create account — U_NANI_MOUS{% endblock %}
+{% block body_class %}auth{% endblock %}
+{% block body %}
+<div class="auth-wrap">
+  <div class="auth-ambient"></div>
+  <div class="auth-nav">
+    <a class="logo" href="{{ url_for('index') }}">U_NANI_MOUS</a>
+    <button class="btn theme" id="theme" aria-label="Toggle dark/light theme">☾</button>
+  </div>
+
+  <div class="card">
+    <h1>Create account</h1>
+    <p class="sub">Already have an account? <a href="{{ url_for('login') }}">Log in instead &nbsp;→</a></p>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <div class="msg {{ category }}">{{ message }}</div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+
+    <form method="post" action="{{ url_for('signup') }}">
+      <label for="name">Full name</label>
+      <input id="name" name="name" type="text" placeholder="Alex Morgan" required autofocus>
+
+      <label for="email">Email</label>
+      <input id="email" name="email" type="email" placeholder="you@example.com" autocomplete="email" required>
+      <label for="password">Password</label>
+      <input id="password" name="password" type="password" placeholder="At least 6 characters" minlength="6" required>
+
+      <button class="btn primary auth-submit" type="submit">Create account &nbsp;↗</button>
+    </form>
+    <p class="sub">Already created an account and waiting for a code?
+      <a href="{{ url_for('verify_email') }}">Enter your email OTP →</a>
+    </p>
+    <a class="back" href="{{ url_for('index') }}">← Back to home</a>
+  </div>
+</div>
+{% endblock %}

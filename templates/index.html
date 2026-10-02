@@ -1,0 +1,212 @@
+{% extends "base.html" %}
+{% from "partials/resume_doc.html" import resume_doc %}
+{% block extra_css %}<link rel="stylesheet" href="{{ url_for('static', filename='css/resume-templates.css') }}">{% endblock %}
+{% block body %}
+{% include "partials/nav.html" %}
+
+<!-- Hero Section -->
+<section class="hero">
+  <div class="ambient"></div>
+
+  <div class="hero-inner">
+    <div class="eyebrow">A smarter way to build your professional presence</div>
+
+    <div class="title-wrap">
+      <h1 class="title" id="title" aria-label="U_NANI_MOUS"></h1>
+    </div>
+
+    <div class="tagline">Build once. <em>Present everywhere.</em></div>
+
+    <p class="desc">
+      U_NANI_MOUS brings your career achievements, skills, and projects together into one neat foundation —
+      then helps you turn them into polished, ATS-calibrated resumes in minutes.
+    </p>
+
+    <div class="actions" id="heroActions">
+      {% if user %}
+        <span class="btn" style="pointer-events:none">Welcome back, {{ user.name.split(' ')[0] }}</span>
+        <a class="btn primary" href="{{ url_for('dashboard') }}">Enter Dashboard &nbsp; ↗</a>
+      {% else %}
+        <a class="btn" href="{{ url_for('login') }}">Sign in</a>
+        <a class="btn primary" href="{{ url_for('signup') }}">Sign up &nbsp; ↗</a>
+      {% endif %}
+    </div>
+  </div>
+
+  <div class="signal"><span><i class="dot"></i>PERSONAL PROFILE → RESUME</span></div>
+  <div class="scroll">SCROLL</div>
+</section>
+
+<!-- The Idea / Philosophy Section -->
+<section class="intro" id="idea">
+  <div class="intro-inner">
+    <div class="index">THE IDEA</div>
+    <h2>
+      <span>One profile.</span><br>
+      <span style="transition-delay:.1s">One place.</span><br>
+      <span style="transition-delay:.2s">Your whole story.</span>
+    </h2>
+    <p>
+      Add your education, skills, projects, experience, certifications and professional links once.
+      U_NANI_MOUS gives you a single foundation from which you can create a resume and present your career identity online.
+      AI can then help refine the way your real experience is expressed — without inventing it.
+    </p>
+  </div>
+</section>
+
+<!-- Resume Showcase Section -->
+<section class="showcase" id="resume">
+  <div class="showcase-copy">
+    <div class="index">AI RESUME</div>
+    <h2>Your story, <em>formatted right.</em></h2>
+    <p>
+      U_NANI_MOUS turns your profile into a clean, recruiter-ready resume — structured and
+      formatted exactly the way top hiring teams and ATS algorithms expect.
+    </p>
+    <p>No tedious formatting every time you apply. Fill in your details once, generate and customize whenever you need.</p>
+  </div>
+
+  <div class="showcase-visual">
+    <div class="mock-card mock-card-resume">
+      <div class="mini">
+        {{ resume_doc('basic', 'Manrope', '#2f6b3a', 'Alex Morgan', 'Senior Full-Stack Engineer',
+           ['San Francisco, CA', 'Full-Stack Specialist', 'Available for Roles'],
+           'Full-stack engineer with 5+ years of experience designing scalable distributed web architectures, high-performance APIs, and intuitive user interfaces. Passionate about system reliability, developer tooling, and shipping robust software.',
+           [{'title':'Senior Software Engineer','org':'Vanguard Systems','start':'2022','end':'Present','desc':'Architected event-driven microservices pipeline processing 15M+ requests daily. Reduced p99 query latency by 42% and achieved 99.99% system uptime.'},
+            {'title':'Software Engineer','org':'Helix Cloud Technologies','start':'2020','end':'2022','desc':'Engineered customer-facing real-time dashboard in React and TypeScript. Streamlined CI/CD deployment pipelines, cutting release cycles by 60%.'}],
+           [{'degree':'B.S. in Computer Science','school':'University of California, Berkeley','start':'2016','end':'2020','desc':''}],
+           [{'name':'Distributed Cache Engine','desc':'High-throughput in-memory key-value cache built with Go and Raft consensus.','link':'github.com/alexmorgan/cache-engine'}],
+           ['TypeScript', 'React', 'Python', 'Node.js', 'PostgreSQL', 'Docker', 'AWS', 'Redis', 'GraphQL']) }}
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 16 Templates Gallery Section -->
+<section class="templates-gallery" id="templates">
+  <div class="gallery-header">
+    <div class="index">TEMPLATES</div>
+    <h2>16 ATS-Friendly Formats</h2>
+    <p>Every layout is calibrated for optimal readability, parser compatibility, and structural balance.</p>
+  </div>
+
+  <div class="gallery-grid">
+    <div class="tpl-card">
+      <div class="tpl-name">Basic ATS</div>
+      <p class="tpl-desc">Clean single-column structure that delivers maximal keyword density for any ATS filter.</p>
+    </div>
+    <div class="tpl-card">
+      <div class="tpl-name">Minimalist</div>
+      <p class="tpl-desc">Thin rules, generous whitespace, letting pure experience and skills command focus.</p>
+    </div>
+    <div class="tpl-card">
+      <div class="tpl-name">Traditional</div>
+      <p class="tpl-desc">Centered classical serif header and structured flow ideal for institutional and corporate roles.</p>
+    </div>
+    <div class="tpl-card">
+      <div class="tpl-name">Modern</div>
+      <p class="tpl-desc">High-contrast dark name header engineered to leave an immediate, memorable impression.</p>
+    </div>
+    <div class="tpl-card">
+      <div class="tpl-name">IT Architecture</div>
+      <p class="tpl-desc">High-contrast two-column division built specifically for deep technical and system stacks.</p>
+    </div>
+    <div class="tpl-card">
+      <div class="tpl-name">Functional</div>
+      <p class="tpl-desc">Skills lead and experience follows, ideal for career transitions and specialized pivots.</p>
+    </div>
+    <div class="tpl-card">
+      <div class="tpl-name">Professional</div>
+      <p class="tpl-desc">Refined corporate structure with strategic accents that communicate senior caliber.</p>
+    </div>
+    <div class="tpl-card">
+      <div class="tpl-name">Collegiate</div>
+      <p class="tpl-desc">Education, leadership, and research achievements prioritized for recent graduates.</p>
+    </div>
+    <div class="tpl-card">
+      <div class="tpl-name">Creative Vanguard</div>
+      <p class="tpl-desc">Sleek gradient banner suited for designers, product strategists, and creative leads.</p>
+    </div>
+    <div class="tpl-card">
+      <div class="tpl-name">Skill Matrix</div>
+      <p class="tpl-desc">Categorizes technical proficiencies upfront for instant recruiter evaluation.</p>
+    </div>
+    <div class="tpl-card">
+      <div class="tpl-name">Hybrid Dossier</div>
+      <p class="tpl-desc">Contrasting sidebar coupled with chronological experience — the best of both worlds.</p>
+    </div>
+    <div class="tpl-card">
+      <div class="tpl-name">General</div>
+      <p class="tpl-desc">Versatile, well-balanced header suitable for management, operations, and business roles.</p>
+    </div>
+    <div class="tpl-card">
+      <div class="tpl-name">Executive</div>
+      <p class="tpl-desc">Understated two-column elegance crafted for leadership, director, and VP candidates.</p>
+    </div>
+    <div class="tpl-card">
+      <div class="tpl-name">Simple</div>
+      <p class="tpl-desc">Single accent focus with minimal visual noise, keeping full attention on career trajectory.</p>
+    </div>
+    <div class="tpl-card">
+      <div class="tpl-name">Tech Terminal</div>
+      <p class="tpl-desc">Developer-centric layout with structured blocks for repositories, stacks, and tools.</p>
+    </div>
+    <div class="tpl-card">
+      <div class="tpl-name">Combined</div>
+      <p class="tpl-desc">Reverse-chronological career history alongside a comprehensive competency matrix.</p>
+    </div>
+  </div>
+</section>
+
+<!-- Call to Action Section -->
+<section class="royal-cta">
+  <div class="royal-cta-inner">
+    <div class="index">GET STARTED</div>
+    <h2>Build once. Present everywhere.</h2>
+    <p>
+      Create your profile once and generate tailored, recruiter-ready resumes whenever you need them.
+    </p>
+    <div class="actions">
+      <a class="btn primary" href="{{ url_for('signup') }}">Get Started &nbsp; ↗</a>
+      <a class="btn" href="{{ url_for('login') }}">Sign in</a>
+    </div>
+  </div>
+</section>
+
+<section class="showcase showcase-portfolio" id="portfolio">
+  <div class="showcase-visual">
+    <div class="mock-card mock-card-resume portfolio-mock-card">
+      <div class="portfolio-mock-top">
+        <span class="portfolio-mock-avatar"></span>
+        <span>
+          <strong>Your name</strong>
+          <small>Developer · Designer · Builder</small>
+        </span>
+      </div>
+      <div class="portfolio-mock-line wide"></div>
+      <div class="portfolio-mock-line"></div>
+      <div class="portfolio-mock-grid">
+        <span></span><span></span><span></span>
+      </div>
+      <div class="portfolio-mock-url">your-domain.com/portfolio/your-name ↗</div>
+    </div>
+  </div>
+  <div class="showcase-copy">
+    <div class="index">PUBLIC PORTFOLIO</div>
+    <h2>One link.<br><em>Your whole story.</em></h2>
+    <p>
+      Publish a clean, recruiter-ready portfolio from the same information that powers your resume.
+      Share one link on LinkedIn, GitHub, applications, and email — then keep it current from one place.
+    </p>
+    <div class="actions" style="justify-content:flex-start;opacity:1;animation:none">
+      {% if user %}
+        <a class="btn primary" href="{{ url_for('portfolio_view') }}">Open your portfolio ↗</a>
+      {% else %}
+        <a class="btn primary" href="{{ url_for('signup') }}">Create your profile ↗</a>
+      {% endif %}
+    </div>
+  </div>
+</section>
+
+{% include "partials/footer.html" %}
+{% endblock %}

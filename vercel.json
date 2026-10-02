@@ -1,0 +1,9 @@
+{
+  "builds": [
+    { "src": "app.py", "use": "@vercel/python" }
+  ],
+  "routes": [
+    { "src": "/static/(.*)", "dest": "app.py" },
+    { "src": "/(.*)", "dest": "app.py" }
+  ]
+}

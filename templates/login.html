@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block title %}Log in — U_NANI_MOUS{% endblock %}
+{% block body_class %}auth auth-login{% endblock %}
+{% block body %}
+<div class="auth-wrap">
+  <div class="auth-login-layout">
+    <aside class="auth-intro">
+      <span class="auth-kicker">U_NANI_MOUS / WORKSPACE</span>
+      <h2>Your career story, in one place.</h2>
+      <p>Sign in to refine your profile, build tailored resumes, and publish a portfolio you can share anywhere.</p>
+      <span class="auth-note">Private by default · Built for your next opportunity</span>
+    </aside>
+    <div class="card">
+      <a class="logo" href="{{ url_for('index') }}">U_NANI_MOUS</a>
+      <button class="btn theme" id="theme" aria-label="Toggle dark/light theme">☾</button>
+      <h1>Log in</h1>
+      <p class="sub">New here? <a href="{{ url_for('signup') }}">Create an account &nbsp;→</a></p>
+
+      {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+          {% for category, message in messages %}
+            <div class="msg {{ category }}">{{ message }}</div>
+          {% endfor %}
+        {% endif %}
+      {% endwith %}
+
+      <form method="post" action="{{ url_for('login') }}">
+        <label for="email">Email</label>
+        <input id="email" name="email" type="email" placeholder="you@example.com" autocomplete="email" required autofocus>
+
+        <div class="label-row">
+          <label for="password">Password</label>
+          <a class="forgot-link" href="{{ url_for('forgot_password') }}">Forgot?</a>
+        </div>
+        <input id="password" name="password" type="password" placeholder="Your password" autocomplete="current-password" required>
+
+        <button class="btn primary auth-submit" type="submit">Sign in</button>
+      </form>
+
+      <a class="back" href="{{ url_for('index') }}">← Back to home</a>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,149 @@
+{% extends "base.html" %}
+{% block title %}{% if profile %}{{ profile.full_name or 'Portfolio' }} — U_NANI_MOUS{% else %}Portfolio not found{% endif %}{% endblock %}
+{% block extra_css %}<link rel="stylesheet" href="{{ url_for('static', filename='css/app.css') }}">{% endblock %}
+{% block body %}
+<div class="portfolio-public-shell">
+  {% if not_found %}
+    <div class="not-found-card">
+      <h1>Portfolio not found</h1>
+      <p>This public link does not match an active profile.</p>
+      <a class="btn primary" href="{{ url_for('index') }}">Back to homepage</a>
+    </div>
+  {% else %}
+    <div class="portfolio-public-card portfolio-theme-{{ portfolio_theme or 'studio' }}">
+      <nav class="portfolio-public-nav" aria-label="Portfolio navigation">
+        <div class="portfolio-public-nav-actions">
+          <button class="portfolio-theme-toggle" id="theme" type="button" aria-label="Toggle light and dark theme">☾</button>
+          <a class="portfolio-nav-contact" href="#contact">Get in touch ↗</a>
+        </div>
+      </nav>
+
+      <div class="portfolio-public-hero">
+        <div class="portfolio-public-identity">
+          {% if photo_url %}
+            <img src="{{ photo_url }}" alt="{{ profile.full_name or 'Portfolio' }}">
+          {% endif %}
+          <span class="portfolio-public-kicker">Professional portfolio</span>
+          <h1>{{ profile.full_name or 'Portfolio' }}</h1>
+          <p class="subhead">{{ profile.headline or 'Building meaningful work.' }}</p>
+          {% if profile.location %}<p class="portfolio-public-location">{{ profile.location }}</p>{% endif %}
+          <div class="portfolio-public-links">
+            {% if profile.email %}<a href="mailto:{{ profile.email }}">Email me ↗</a>{% endif %}
+            {% for link in links %}
+              <a href="{{ link.url }}" target="_blank" rel="noopener">{{ link.platform_name or 'Profile' }} ↗</a>
+            {% endfor %}
+          </div>
+        </div>
+        <div class="portfolio-public-intro">
+          <span class="portfolio-section-label">Overview</span>
+          <h2>{{ summary or 'A thoughtful professional building useful, well-crafted digital experiences.' }}</h2>
+          {% if not summary %}<p class="portfolio-intro-note">More details about this profile are being added.</p>{% endif %}
+        </div>
+      </div>
+
+      {% if experience or education %}
+      <div class="portfolio-public-grid">
+        {% if experience %}
+        <div class="portfolio-section" id="experience">
+          <span class="portfolio-section-label">Career</span>
+          <h3>Experience</h3>
+          <div class="portfolio-stack">
+            {% for item in experience %}
+              {% if item.title or item.org %}
+              <div class="portfolio-card">
+                <h4>{{ item.title }}</h4>
+                <span class="meta">{{ item.org }} · {{ item.start }}{% if item.end %} – {{ item.end }}{% endif %}</span>
+                <p>{{ item.desc }}</p>
+              </div>
+              {% endif %}
+            {% endfor %}
+          </div>
+        </div>
+        {% endif %}
+
+        {% if education %}
+        <div class="portfolio-section">
+          <span class="portfolio-section-label">Education</span>
+          <h3>Education</h3>
+          <div class="portfolio-stack">
+            {% for item in education %}
+              {% if item.degree or item.school %}
+              <div class="portfolio-card">
+                <h4>{{ item.degree }}</h4>
+                <span class="meta">{{ item.school }} · {{ item.start }}{% if item.end %} – {{ item.end }}{% endif %}</span>
+                <p>{{ item.desc }}</p>
+              </div>
+              {% endif %}
+            {% endfor %}
+          </div>
+        </div>
+        {% endif %}
+      </div>
+      {% endif %}
+
+      {% if projects %}
+      <div class="portfolio-section portfolio-section-spaced" id="work">
+        <div class="portfolio-section-heading">
+          <div>
+            <span class="portfolio-section-label">Selected work</span>
+            <h3>Projects</h3>
+          </div>
+          <span class="portfolio-section-count">{{ projects|length }} project{% if projects|length != 1 %}s{% endif %}</span>
+        </div>
+        <div class="portfolio-project-list">
+          {% for item in projects %}
+            <article class="portfolio-project{% if not item.image or not item.image.startswith('http') %} portfolio-project-no-image{% endif %}">
+              {% if item.image and item.image.startswith('http') %}<img class="portfolio-project-image" src="{{ item.image }}" alt="{{ item.name }} preview" loading="lazy">{% endif %}
+              <div>
+                <h4>{{ item.name }}</h4>
+              </div>
+              <div>
+                <p>{{ item.desc }}</p>
+                {% if item.link and item.link.startswith('http') %}<a class="portfolio-project-link" href="{{ item.link }}" target="_blank" rel="noopener">View project ↗</a>{% endif %}
+              </div>
+            </article>
+          {% endfor %}
+        </div>
+      </div>
+      {% endif %}
+
+      {% if skills %}
+      <div class="portfolio-section portfolio-section-spaced">
+        <span class="portfolio-section-label">Capabilities</span>
+        <h3>Skills</h3>
+        <div class="portfolio-tag-list">
+          {% for skill in skills %}
+            <span class="portfolio-tag">{{ skill }}</span>
+          {% endfor %}
+        </div>
+      </div>
+      {% endif %}
+
+      {% if not summary and not experience and not education and not projects and not skills %}
+      <div class="portfolio-empty-state">
+        <span class="portfolio-section-label">Portfolio in progress</span>
+        <h3>This portfolio is being prepared.</h3>
+        <p>Check back soon for selected work, experience, and professional highlights.</p>
+      </div>
+      {% endif %}
+
+      <section class="portfolio-contact" id="contact">
+        <span class="portfolio-section-label">Contact</span>
+        <h2>Let’s build something useful.</h2>
+        <p>For opportunities, collaborations, or a thoughtful conversation, reach out through one of the channels below.</p>
+        <div class="portfolio-contact-actions">
+          {% if profile.email %}
+            <a class="btn primary" href="mailto:{{ profile.email }}">Email {{ profile.email }} ↗</a>
+          {% endif %}
+          {% if profile.mobile_number %}
+            <a class="btn" href="tel:{{ profile.mobile_number }}">Call {{ profile.mobile_number }} ↗</a>
+          {% endif %}
+          {% for link in links %}
+            <a class="btn" href="{{ link.url }}" target="_blank" rel="noopener">{{ link.platform_name or 'Professional profile' }} ↗</a>
+          {% endfor %}
+        </div>
+      </section>
+    </div>
+  {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>{% block title %}U_NANI_MOUS — Build once. Present everywhere.{% endblock %}</title>
+<script>
+  // Set the theme BEFORE the stylesheet paints anything, so headings/text
+  // never flash in the wrong theme's color on first load (this was the
+  // "headings show up white in light mode" bug — style.css was always
+  // correct, main.js was just setting data-theme too late, after the page
+  // had already painted once with the dark defaults).
+  (function(){
+    var t = localStorage.getItem("unani-theme") || "dark";
+    document.documentElement.dataset.theme = t;
+  })();
+</script>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+{% block extra_css %}{% endblock %}
+</head>
+<body class="{% block body_class %}{% endblock %}">
+{% block body %}{% endblock %}
+<script src="{{ url_for('static', filename='js/main.js') }}"></script>
+{% block scripts %}{% endblock %}
+</body>
+</html>

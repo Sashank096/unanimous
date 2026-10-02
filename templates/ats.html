@@ -1,0 +1,125 @@
+{% extends "base.html" %}
+{% block title %}ATS resume checker — U_NANI_MOUS{% endblock %}
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/app.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/ats.css') }}">
+{% endblock %}
+{% block body %}
+{% include "partials/nav.html" %}
+
+<main class="app-shell ats-shell">
+  <div class="page-head">
+    <span class="index">U_NANI_MOUS / ATS CHECK</span>
+    <h1>Make your resume <em>ATS-ready.</em></h1>
+    <p>Check structure, contact details, measurable achievements, and—when you add a job description—keyword alignment.</p>
+  </div>
+
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}{% for category, message in messages %}<div class="msg {{ category }}">{{ message }}</div>{% endfor %}{% endif %}
+  {% endwith %}
+
+  <section class="ats-intro">
+    {% if resume_id %}
+      <div>
+        <span class="ats-kicker">CHECKING SAVED RESUME</span>
+        <h2>{{ resume_title or "Your resume" }}</h2>
+        <p>We analyze the saved content from your resume builder. Save your edits there before running another check.</p>
+      </div>
+      <a class="btn" href="{{ url_for('resume_builder', resume_id=resume_id) }}">Edit resume</a>
+    {% else %}
+      <div>
+        <span class="ats-kicker">INSTANT CONTENT CHECK</span>
+        <h2>Check any resume</h2>
+        <p>Paste resume text or upload a text-based PDF. For a resume you built here, use the ATS check button in its editor.</p>
+      </div>
+    {% endif %}
+  </section>
+
+  {% if result %}
+  <section class="ats-results" aria-live="polite">
+    <div class="ats-score-card">
+      <div class="ats-score-ring" style="--score: {{ result.score }}%" role="img" aria-label="ATS readiness score: {{ result.score }} out of 100">
+        <div><strong>{{ result.score }}</strong><span>/ 100</span></div>
+      </div>
+      <div class="ats-score-copy">
+        <span class="ats-kicker">CONTENT READINESS ESTIMATE</span>
+        <h2>{{ result.verdict }}</h2>
+        <p>{% if result.has_jd %}Includes a comparison with the target job description.{% else %}Add a job description below for a tailored keyword comparison.{% endif %}</p>
+      </div>
+    </div>
+
+    <div class="ats-grid">
+      <section class="ats-panel">
+        <span class="ats-kicker">SCORE BREAKDOWN</span>
+        <h3>What the checker found</h3>
+        <div class="ats-check-list">
+          {% for check in result.checks %}
+          <article class="ats-check">
+            <div class="ats-check-head">
+              <strong>{{ check.name }}</strong>
+              <span>{{ check.got|round|int }} / {{ check.max }}</span>
+            </div>
+            <div class="ats-progress" aria-hidden="true">
+              <span style="width: {{ (100 * check.got / check.max)|round|int }}%"></span>
+            </div>
+            <p>{{ check.note }}</p>
+          </article>
+          {% endfor %}
+        </div>
+      </section>
+
+      <section class="ats-panel ats-suggestions">
+        <span class="ats-kicker">NEXT IMPROVEMENTS</span>
+        <h3>Suggestions you can act on</h3>
+        {% if result.fixes %}
+        <ol>
+          {% for fix in result.fixes %}<li>{{ fix }}</li>{% endfor %}
+        </ol>
+        {% else %}
+        <p class="ats-empty">No major content gaps were detected by these checks. Review every detail for accuracy before applying.</p>
+        {% endif %}
+        {% if result.has_jd %}
+          <div class="ats-keywords">
+            <h4>Job description keywords</h4>
+            {% if result.matched %}<p><strong>Present:</strong> {{ result.matched|join(", ") }}</p>{% endif %}
+            {% if result.missing %}<p><strong>Not detected:</strong> {{ result.missing|join(", ") }}</p>{% endif %}
+            {% if not result.matched and not result.missing %}<p>No useful keywords were found in the job description.</p>{% endif %}
+          </div>
+        {% endif %}
+      </section>
+    </div>
+  </section>
+  {% endif %}
+
+  <section class="ats-form-panel">
+    <div class="ats-form-heading">
+      <span class="ats-kicker">{% if result %}REFINE THE CHECK{% else %}RUN YOUR CHECK{% endif %}</span>
+      <h2>{% if result and result.has_jd %}Try another job description{% else %}Compare with a job description{% endif %}</h2>
+      <p>Paste the role description to see relevant terms detected in your resume. Only add keywords that honestly reflect your experience.</p>
+    </div>
+    <form method="post" action="{{ analysis_action }}" enctype="multipart/form-data" class="ats-form">
+      {% if not resume_id %}
+      <div class="ats-field">
+        <label for="resume">Resume text</label>
+        <textarea id="resume" name="resume" rows="12" placeholder="Paste the text from your resume here">{{ resume_text }}</textarea>
+      </div>
+      <div class="ats-field ats-file-field">
+        <label for="resume-file">Or choose a text-based PDF</label>
+        <input id="resume-file" name="file" type="file" accept="application/pdf,.pdf">
+        <small>Scanned or image-only PDFs may not contain text an ATS can read.</small>
+      </div>
+      {% endif %}
+      <div class="ats-field">
+        <label for="jd">Target job description <span>(optional, recommended)</span></label>
+        <textarea id="jd" name="jd" rows="8" placeholder="Paste the job description to check for relevant skills and terms">{{ jd }}</textarea>
+      </div>
+      <div class="ats-submit-row">
+        <button class="btn primary" type="submit">{% if result %}Update analysis{% else %}Analyze resume{% endif %}</button>
+        {% if resume_id %}<a class="btn" href="{{ url_for('resume_builder', resume_id=resume_id) }}">Back to resume</a>{% endif %}
+      </div>
+    </form>
+  </section>
+
+  <p class="ats-disclaimer">This is a content-based estimate, not a score from a specific employer’s ATS and not a guarantee of an interview. Layout and parsing behavior vary between systems. Keep the resume truthful; never add a keyword, skill, or achievement you cannot support.</p>
+</main>
+{% endblock %}

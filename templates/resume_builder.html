@@ -1,0 +1,155 @@
+{% extends "base.html" %}
+{% from "partials/resume_doc.html" import resume_doc %}
+{% block title %}{{ resume.title }} — U_NANI_MOUS{% endblock %}
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/app.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/resume-templates.css') }}">
+{% endblock %}
+{% block body %}
+{% include "partials/nav.html" %}
+
+<div class="app-shell" style="max-width:1400px">
+  <div class="page-head" style="margin-bottom:28px">
+    <span class="index">U_NANI_MOUS / RESUME / BUILD</span>
+    <h1><em>{{ template.name }}</em></h1>
+    <p>Edit on the left, watch it update on the right. Save this resume to use it as the source for your public portfolio.</p>
+  </div>
+
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}{% for category, message in messages %}<div class="msg {{ category }}">{{ message }}</div>{% endfor %}{% endif %}
+  {% endwith %}
+
+  <form id="builderForm" method="post" action="{{ url_for('resume_builder', resume_id=resume.id) }}">
+  <div class="builder-layout">
+    <div class="builder-panel">
+
+      <div class="field" style="margin-bottom:16px">
+        <label for="title">Resume title <span style="opacity:.6">(for you — not shown on the resume)</span></label>
+        <input type="text" id="title" name="title" value="{{ resume.title }}">
+      </div>
+
+      <div class="field" style="margin-bottom:16px">
+        <label for="headlineField">Target role / headline</label>
+        <input type="text" id="headlineField" placeholder="e.g. Frontend Developer, ML Engineer" value="{{ content.headline }}">
+      </div>
+
+      <div class="builder-toolbar">
+        <select id="templateSelect" name="template_id">
+          {% for t in templates %}
+          <option value="{{ t.id }}" {% if t.id == template.id %}selected{% endif %}>{{ t.name }}</option>
+          {% endfor %}
+        </select>
+        <select id="fontSelect" name="font">
+          {% for f in fonts %}
+          <option value="{{ f }}" {% if f == resume.font %}selected{% endif %}>{{ f }}</option>
+          {% endfor %}
+        </select>
+        <div class="swatches" id="swatches">
+          {% for c in accents %}
+          <button type="button" class="swatch {% if c == resume.accent %}active{% endif %}" data-color="{{ c }}" style="background:{{ c }}"></button>
+          {% endfor %}
+        </div>
+        <input type="hidden" id="accentInput" name="accent" value="{{ resume.accent }}">
+      </div>
+
+      <div class="b-section">
+        <div class="b-section-head"><h4>Summary</h4>        <button type="button" class="ai-btn" data-ai-target="summaryField">✦ Enhance wording</button></div>
+        <div class="field"><textarea id="summaryField">{{ content.summary }}</textarea></div>
+      </div>
+
+      <div class="b-section">
+        <div class="b-section-head"><h4>Experience</h4></div>
+        <div id="experienceList">
+          {% for e in content.experience %}
+          <div class="entry-block">
+            <button type="button" class="rm">×</button>
+            <div class="form-row"><div class="field"><label>Title</label><input type="text" class="f-title" value="{{ e.title }}"></div><div class="field"><label>Organisation</label><input type="text" class="f-org" value="{{ e.org }}"></div></div>
+            <div class="form-row"><div class="field"><label>Start</label><input type="text" class="f-start" value="{{ e.start }}"></div><div class="field"><label>End</label><input type="text" class="f-end" value="{{ e.end }}"></div></div>
+            <div class="field"><label style="display:flex;justify-content:space-between;align-items:center">Description <button type="button" class="ai-btn" data-ai-desc="1">✦ Enhance</button></label><textarea class="f-desc">{{ e.desc }}</textarea></div>
+          </div>
+          {% endfor %}
+        </div>
+        <button type="button" class="add-btn" id="addExperience">+ Add experience</button>
+      </div>
+
+      <div class="b-section">
+        <div class="b-section-head"><h4>Education</h4></div>
+        <div id="educationList">
+          {% for e in content.education %}
+          <div class="entry-block">
+            <button type="button" class="rm">×</button>
+            <div class="form-row"><div class="field"><label>Degree</label><input type="text" class="f-degree" value="{{ e.degree }}"></div><div class="field"><label>School</label><input type="text" class="f-school" value="{{ e.school }}"></div></div>
+            <div class="form-row"><div class="field"><label>Start</label><input type="text" class="f-start" value="{{ e.start }}"></div><div class="field"><label>End</label><input type="text" class="f-end" value="{{ e.end }}"></div></div>
+            <div class="field"><label>Notes</label><textarea class="f-desc">{{ e.desc }}</textarea></div>
+          </div>
+          {% endfor %}
+        </div>
+        <button type="button" class="add-btn" id="addEducation">+ Add education</button>
+      </div>
+
+      <div class="b-section">
+        <div class="b-section-head"><h4>Projects</h4></div>
+        <div id="projectsList">
+          {% for p in content.projects %}
+          <div class="entry-block">
+            <button type="button" class="rm">×</button>
+            <div class="form-row"><div class="field"><label>Name</label><input type="text" class="f-name" value="{{ p.name }}"></div><div class="field"><label>Link</label><input type="text" class="f-link" value="{{ p.link }}" placeholder="https://..."></div></div>
+            <div class="field"><label>Project image <span class="upload-status">{% if p.image %}Ready{% endif %}</span></label><input type="file" class="f-image" accept="image/png,image/jpeg,image/webp"><input type="text" class="f-image-url" value="{{ p.image }}" placeholder="Or paste an image URL"></div>
+            <div class="field"><label style="display:flex;justify-content:space-between;align-items:center">Description <button type="button" class="ai-btn" data-ai-desc="1">✦ Enhance</button></label><textarea class="f-desc">{{ p.desc }}</textarea></div>
+          </div>
+          {% endfor %}
+        </div>
+        <button type="button" class="add-btn" id="addProject">+ Add project</button>
+      </div>
+
+      <div class="b-section">
+        <div class="b-section-head"><h4>Skills</h4></div>
+        <div class="skills-input-row">
+          <input type="text" id="skillInput" placeholder="e.g. Python — press Enter to add">
+          <button type="button" class="btn" id="addSkill">Add</button>
+        </div>
+        <div class="chip-editable" id="skillsChips">
+          {% for s in content.skills %}
+          <span class="chip" data-skill="{{ s }}">{{ s }}<button type="button" class="rm-chip">×</button></span>
+          {% endfor %}
+        </div>
+      </div>
+
+      <input type="hidden" name="content_json" id="contentJson">
+      <div class="form-actions">
+        <a class="btn" href="{{ url_for('dashboard') }}">Back to dashboard</a>
+        <button class="btn primary" type="submit">Save resume</button>
+        <button class="btn" type="submit" name="intent" value="ats">ATS resume check ↗</button>
+        <a class="btn" href="{{ url_for('portfolio_view') }}">Generate portfolio ↗</a>
+      </div>
+    </div>
+
+    <div class="builder-preview-wrap">
+      <div class="preview-toolbar">
+        <span class="hint">LIVE PREVIEW</span>
+        <button type="button" class="btn" id="downloadBtn">Download / Print</button>
+      </div>
+      <div class="resume-canvas">
+        <div id="resumePreview">
+          {{ resume_doc(template.id, resume.font, resume.accent, profile.full_name or user.name, content.headline,
+             [profile.location, profile.mobile_number, user.email] + links|map(attribute='url')|list,
+             content.summary, content.experience, content.education, content.projects, content.skills, doc_id='',
+             photo_url=photo_url) }}
+        </div>
+      </div>
+    </div>
+  </div>
+  </form>
+</div>
+{% endblock %}
+{% block scripts %}
+<script>
+  window.UNANI_RESUME_BASE = {
+    name: {{ (profile.full_name or user.name)|tojson }},
+    photo: {{ (photo_url or '')|tojson }},
+    contact: [{{ (profile.location or '')|tojson }}, {{ (profile.mobile_number or '')|tojson }}, {{ user.email|tojson }}]
+      .concat({{ links|map(attribute='url')|list|tojson }})
+  };
+</script>
+<script src="{{ url_for('static', filename='js/resume-builder.js') }}"></script>
+{% endblock %}

@@ -1,0 +1,145 @@
+{% extends "base.html" %}
+{% block title %}Portfolio — U_NANI_MOUS{% endblock %}
+{% block extra_css %}<link rel="stylesheet" href="{{ url_for('static', filename='css/app.css') }}">{% endblock %}
+{% block body %}
+{% include "partials/nav.html" %}
+
+<div class="app-shell portfolio-shell">
+  <div class="page-head">
+    <span class="index">U_NANI_MOUS / PORTFOLIO</span>
+    <h1>Publish your <em>personal brand</em>.</h1>
+    <p>Your portfolio is generated from your latest saved resume and profile. Save a new resume, then publish this page to update your public story.</p>
+  </div>
+
+  <div class="portfolio-share">
+    <div>
+      <span class="mini-label">Shareable link</span>
+      <div class="share-link">{{ portfolio_url }}</div>
+      <div class="meta" style="margin-top:8px;">
+        {% if profile.portfolio_published %}Published publicly{% else %}Private draft — publish it from your profile settings{% endif %}
+      </div>
+    </div>
+    <div class="portfolio-actions">
+      <a class="btn primary" href="{{ portfolio_theme_url(portfolio_slug, selected_theme) }}" target="_blank">Open public page ↗</a>
+      <a class="btn" href="{{ url_for('profile_edit') }}">Edit profile</a>
+    </div>
+  </div>
+
+  <div class="portfolio-section portfolio-theme-picker">
+    <div class="portfolio-section-heading">
+      <div>
+        <span class="portfolio-section-label">Choose a theme</span>
+        <h3>Make your portfolio feel like you.</h3>
+      </div>
+      <span class="portfolio-section-count">{{ portfolio_themes|length }} themes</span>
+    </div>
+    <p class="theme-picker-intro">Preview a style, then share the generated link. Your profile and resume content stay the same while the presentation changes.</p>
+    <div class="portfolio-theme-options">
+      {% for theme in portfolio_themes %}
+      <a class="portfolio-theme-option{% if selected_theme == theme.id %} is-selected{% endif %}" href="{{ portfolio_theme_url(portfolio_slug, theme.id) }}" target="_blank">
+        <span class="theme-preview theme-preview-{{ theme.id }}">
+          <span></span><span></span><span></span>
+        </span>
+        <strong>{{ theme.name }}</strong>
+        <small>{{ theme.description }}</small>
+        <em>Preview ↗</em>
+      </a>
+      {% endfor %}
+    </div>
+  </div>
+
+  <div class="portfolio-section portfolio-checklist">
+    <div class="portfolio-section-heading">
+      <div>
+        <span class="portfolio-section-label">Guided setup</span>
+        <h3>We’ll help you finish it.</h3>
+      </div>
+      {% set completed = portfolio_checklist|selectattr('done')|list|length %}
+      <span class="portfolio-section-count">{{ completed }}/{{ portfolio_checklist|length }} complete</span>
+    </div>
+    <p class="theme-picker-intro">You don’t need to know what belongs in a portfolio. Follow this checklist and add only the details that are true for you.</p>
+    <div class="portfolio-checklist-grid">
+      {% for item in portfolio_checklist %}
+      <div class="portfolio-check-item{% if item.done %} is-done{% endif %}">
+        <span class="check-icon">{{ '✓' if item.done else '○' }}</span>
+        <span><strong>{{ item.label }}</strong><small>{% if item.done %}Added{% elif item.required %}Recommended before publishing{% else %}Optional, but makes your portfolio stronger{% endif %}</small></span>
+      </div>
+      {% endfor %}
+    </div>
+    <div class="portfolio-check-actions">
+      {% if not profile.headline or not profile.bio or not profile.mobile_number or not profile.location %}
+      <a class="btn primary" href="{{ url_for('profile_edit') }}">Complete profile</a>
+      {% endif %}
+      {% if not resumes %}
+      <a class="btn primary" href="{{ url_for('resume_gallery') }}">Create your resume</a>
+      {% elif not (resumes[0].content or {}).get('skills') or not (resumes[0].content or {}).get('projects') %}
+      <a class="btn" href="{{ url_for('resume_builder', resume_id=resumes[0].id) }}">Add portfolio details</a>
+      {% endif %}
+    </div>
+  </div>
+
+  <div class="portfolio-layout">
+    <aside class="profile-side">
+      {% if photo_url %}<img class="profile-avatar" src="{{ photo_url }}" alt="{{ profile.full_name or user.name }}">{% endif %}
+      <h2>{{ profile.full_name or user.name }}</h2>
+      <div class="role">{{ profile.headline or 'Professional portfolio' }}</div>
+      <p style="color:var(--muted);line-height:1.7;margin-bottom:18px;">{{ profile.bio or 'Add a short bio in your profile so recruiters understand your story instantly.' }}</p>
+      <a class="btn primary" href="{{ url_for('resume_gallery') }}">Build resume</a>
+    </aside>
+
+    <div class="portfolio-main">
+      <div class="portfolio-section">
+        <h3>About</h3>
+        <p>{{ profile.bio or 'Your profile is the foundation for your portfolio. Keep it polished and your public page will stay credible and recruiter-friendly.' }}</p>
+      </div>
+
+      {% if resumes %}
+      <div class="portfolio-section">
+        <h3>Latest resume</h3>
+        <div class="portfolio-card" style="margin-bottom:16px;">
+          <h4>{{ resumes[0].title }}</h4>
+          <span class="meta">{{ template_map[resumes[0].template_id].name }} · updated {{ resumes[0].updated_at[:10] if resumes[0].updated_at else 'recently' }}</span>
+          <p>{{ (resumes[0].content or {}).summary or 'Your resume summary is ready for refinement in the resume builder.' }}</p>
+        </div>
+        <a class="btn primary" href="{{ url_for('resume_builder', resume_id=resumes[0].id) }}">Edit latest resume</a>
+        <span class="meta" style="display:block;margin-top:12px;">This is the content your public portfolio will display.</span>
+      </div>
+      {% else %}
+      <div class="portfolio-section portfolio-missing-card">
+        <span class="portfolio-section-label">Next step</span>
+        <h3>Your portfolio needs a resume.</h3>
+        <p>Start with a template. We’ll guide you through summary, experience, education, projects, and skills.</p>
+        <a class="btn primary" href="{{ url_for('resume_gallery') }}">Choose a resume template ↗</a>
+      </div>
+      {% endif %}
+
+      <div class="portfolio-section">
+        <h3>Profile snapshot</h3>
+        <div class="portfolio-stack">
+          <div class="portfolio-card">
+            <h4>Location</h4>
+            <p>{{ profile.location or 'Add your current location' }}</p>
+          </div>
+          <div class="portfolio-card">
+            <h4>Phone</h4>
+            <p>{{ profile.mobile_number or 'Add your contact details' }}</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="portfolio-section">
+        <h3>Professional links</h3>
+        {% if links %}
+          <div class="portfolio-tag-list">
+            {% for link in links %}
+              <span class="portfolio-tag">{{ link.platform_name }}</span>
+            {% endfor %}
+          </div>
+        {% else %}
+          <p>No links added yet. Add your public profile and social links from the profile editor.</p>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

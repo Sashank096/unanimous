@@ -1,0 +1,69 @@
+.ats-shell{max-width:1120px}
+.ats-shell .page-head{margin-bottom:32px}
+.ats-intro,.ats-panel,.ats-form-panel,.ats-score-card{
+  border:1px solid var(--line);border-radius:18px;background:var(--panel);backdrop-filter:blur(18px)
+}
+.ats-intro{
+  display:flex;align-items:center;justify-content:space-between;gap:20px;padding:22px 24px;margin-bottom:22px
+}
+.ats-intro h2,.ats-score-copy h2,.ats-form-heading h2{margin:5px 0 6px;font-size:21px;letter-spacing:-.04em}
+.ats-intro p,.ats-score-copy p,.ats-form-heading p{margin:0;color:var(--muted);font-size:12px;line-height:1.65}
+.ats-kicker{font:10px "DM Mono",monospace;letter-spacing:.1em;color:var(--accent);text-transform:uppercase}
+.ats-score-card{display:flex;align-items:center;gap:22px;padding:24px;margin-bottom:18px}
+.ats-score-ring{
+  flex:0 0 112px;width:112px;height:112px;border-radius:50%;display:grid;place-items:center;
+  background:conic-gradient(var(--accent) var(--score),var(--line) 0)
+}
+.ats-score-ring>div{width:88px;height:88px;border-radius:50%;background:var(--bg);display:flex;align-items:baseline;justify-content:center;gap:3px;padding-top:28px}
+.ats-score-ring strong{font-size:34px;line-height:1;letter-spacing:-.06em}
+.ats-score-ring span{font:10px "DM Mono",monospace;color:var(--muted)}
+.ats-score-copy h2{font-size:25px}
+.ats-grid{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(280px,.8fr);gap:18px;margin-bottom:22px}
+.ats-panel{padding:24px}
+.ats-panel h3{font-size:17px;letter-spacing:-.03em;margin:7px 0 20px}
+.ats-check-list{display:grid;gap:17px}
+.ats-check{border-bottom:1px solid var(--line);padding-bottom:14px}
+.ats-check:last-child{border-bottom:0;padding-bottom:0}
+.ats-check-head{display:flex;justify-content:space-between;gap:12px;font-size:12px}
+.ats-check-head span{font:10px "DM Mono",monospace;color:var(--muted);white-space:nowrap}
+.ats-progress{height:5px;background:var(--line);border-radius:10px;overflow:hidden;margin:9px 0}
+.ats-progress span{display:block;height:100%;background:var(--accent);border-radius:inherit}
+.ats-check p,.ats-empty,.ats-keywords p{margin:0;color:var(--muted);font-size:11px;line-height:1.6}
+.ats-suggestions ol{list-style:none;padding:0;margin:0;counter-reset:ats-fix}
+.ats-suggestions li{counter-increment:ats-fix;position:relative;padding:0 0 15px 34px;color:var(--muted);font-size:12px;line-height:1.65}
+.ats-suggestions li:before{
+  content:counter(ats-fix,decimal-leading-zero);position:absolute;left:0;top:1px;
+  color:var(--accent);font:10px "DM Mono",monospace
+}
+.ats-keywords{border-top:1px solid var(--line);padding-top:17px;margin-top:8px}
+.ats-keywords h4{font-size:12px;margin:0 0 9px}
+.ats-keywords p+p{margin-top:6px}
+.ats-keywords strong{color:var(--fg)}
+.ats-form-panel{padding:26px}
+.ats-form-heading{max-width:680px;margin-bottom:20px}
+.ats-form-heading h2{font-size:20px}
+.ats-form{display:grid;gap:18px}
+.ats-field label{display:block;font:10px "DM Mono",monospace;letter-spacing:.08em;color:var(--muted);margin-bottom:8px;text-transform:uppercase}
+.ats-field label span{font-family:Manrope,Arial,sans-serif;letter-spacing:0;text-transform:none}
+.ats-field textarea{
+  display:block;width:100%;resize:vertical;min-height:105px;background:var(--bg);border:1px solid var(--line);
+  border-radius:10px;padding:13px 14px;color:var(--fg);font:12px/1.7 Manrope,Arial,sans-serif
+}
+.ats-field textarea:focus,.ats-field input:focus{outline:2px solid var(--accent);outline-offset:1px}
+.ats-file-field input{display:block;max-width:100%;margin:4px 0 7px;color:var(--muted);font-size:11px}
+.ats-file-field small{color:var(--muted);font-size:10px}
+.ats-submit-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.ats-submit-row .btn{padding:12px 18px}
+.ats-disclaimer{max-width:850px;color:var(--muted);font-size:10px;line-height:1.7;margin:16px 2px 0}
+@media(max-width:800px){
+  .ats-grid{grid-template-columns:1fr}
+}
+@media(max-width:600px){
+  .ats-shell{padding-top:105px}
+  .ats-intro{align-items:flex-start;flex-direction:column}
+  .ats-score-card{align-items:flex-start;padding:18px;gap:16px}
+  .ats-score-ring{flex-basis:88px;width:88px;height:88px}
+  .ats-score-ring>div{width:68px;height:68px;padding-top:22px}
+  .ats-score-ring strong{font-size:27px}
+  .ats-panel,.ats-form-panel{padding:18px}
+}

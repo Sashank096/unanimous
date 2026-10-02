@@ -1,0 +1,50 @@
+<header class="nav">
+  <a class="logo" href="{{ url_for('index') }}">U_NANI_MOUS</a>
+
+  <nav class="nav-links">
+    {% if user %}
+      <a href="{{ url_for('dashboard') }}">DASHBOARD</a>
+      <a href="{{ url_for('profile_view') }}">PROFILE</a>
+      <a href="{{ url_for('resume_gallery') }}">RESUME</a>
+      <a href="{{ url_for('ats_check') }}">ATS CHECK</a>
+      <a href="{{ url_for('portfolio_view') }}">PORTFOLIO</a>
+    {% else %}
+      <a href="{{ url_for('index') }}#idea">THE IDEA</a>
+      <a href="{{ url_for('index') }}#resume">AI RESUME</a>
+      <a href="{{ url_for('index') }}#templates">TEMPLATES</a>
+      <a href="{{ url_for('index') }}#portfolio">PORTFOLIO</a>
+    {% endif %}
+  </nav>
+
+  <div class="nav-actions">
+    <button class="btn theme" id="theme" aria-label="Toggle dark/light theme">☾</button>
+    {% if user %}
+      <span class="btn" style="pointer-events:none">Hi, {{ user.name.split(' ')[0] }}</span>
+      <a class="btn primary" href="{{ url_for('logout') }}">Log out</a>
+    {% else %}
+      <a class="btn" href="{{ url_for('login') }}">Sign in</a>
+      <a class="btn primary" href="{{ url_for('signup') }}">Sign up</a>
+    {% endif %}
+    <button class="hamburger" id="hamburger" aria-label="Open menu" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</header>
+
+<div class="mobile-menu" id="mobileMenu">
+  {% if user %}
+    <a href="{{ url_for('dashboard') }}">DASHBOARD</a>
+    <a href="{{ url_for('profile_view') }}">PROFILE</a>
+    <a href="{{ url_for('resume_gallery') }}">RESUME</a>
+    <a href="{{ url_for('ats_check') }}">ATS CHECK</a>
+    <a href="{{ url_for('portfolio_view') }}">PORTFOLIO</a>
+    <a href="{{ url_for('logout') }}">Log out</a>
+  {% else %}
+    <a href="{{ url_for('index') }}#idea">THE IDEA</a>
+    <a href="{{ url_for('index') }}#resume">AI RESUME</a>
+    <a href="{{ url_for('index') }}#templates">TEMPLATES</a>
+    <a href="{{ url_for('index') }}#portfolio">PORTFOLIO</a>
+    <a href="{{ url_for('login') }}">Sign in</a>
+    <a href="{{ url_for('signup') }}">Sign up</a>
+  {% endif %}
+</div>
